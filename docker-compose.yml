@@ -1,0 +1,25 @@
+version: '3'
+# Remember, services are essentially containers
+services: 
+  web:
+    build:
+    # Normall for build we just place a period but because we're using the .dev ext on our Dockerfile, we have to set the context of where the build that app, which remains as a period for the current directory, then we indicate the specific dockerfile itself
+      context: .
+      dockerfile: Dockerfile.dev
+    ports: 
+      - "3000:3000"
+    volumes:
+    # volumes acts as the -v flags where we can 1) bookmark node_modules so that it doesn't get mapped and 2) indicate what we do want to be mapped into the container
+      - /app/node_modules
+      # Says map the current local folder into the /app folder in the container
+      - .:/app
+  
+  # The next service/container is for testing. In this case, the standard test file that comes with create-react-app. Almost identical to the above 'web' service, but overides the starting command
+  tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /app/node_modules
+      - .:/app
+    command: ["npm", "run", "test"]
