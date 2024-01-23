@@ -1,0 +1,15 @@
+# Tells travis we need super-user permissions to execute this build
+sudo: required
+
+services:
+  # Tells travis we need a copy of docker
+  - docker
+
+before_install:
+  # Series of commands that get executed before our tests run
+  - docker build -t mhart92/udemy-docker-react -f Dockerfile.dev .
+
+# Contains commands to actually run the test suite
+# Travis watches the output of these commands to determine test results
+script:
+  - docker run -e CI=true mhart92/udemy-docker-react npm run test
